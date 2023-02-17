@@ -1,0 +1,22 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+spring:
+  config:
+    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888/}
+  application:
+    name: fast-food-app-auth-server
+  profiles:
+    active: dev
+
+  datasource:
+    url: jdbc:mysql://fast-food-auth.c1rtbhbfjwdb.us-east-1.rds.amazonaws.com/ffapp?useSSL=false
+    username: admin
+    password: Madara*20
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
+server:
+  port: 3000
