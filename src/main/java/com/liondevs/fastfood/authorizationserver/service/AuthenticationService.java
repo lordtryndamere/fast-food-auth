@@ -12,12 +12,17 @@ import com.liondevs.fastfood.authorizationserver.persistence.enums.Role;
 import com.liondevs.fastfood.authorizationserver.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -30,6 +35,8 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    private  final UserDetailsService userDetailsService;
+
     public AuthenticationResponse register(RegisterRequest request){
     try{
         User user = mapper.map(request);
@@ -38,15 +45,43 @@ public class AuthenticationService {
             throw new DefaultErrorException("User email already exists", HttpStatus.BAD_REQUEST);
         }
         userRepository.save(user);
-        String token = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(token)
-                .build();
+        return getAuthenticationResponse(user);
     }
     catch (RuntimeException e){
             throw new DefaultErrorException(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
     }
+
+    public ResponseEntity<?> validateToken(String token){
+    try {
+        String userEmail = jwtService.getUserName(token);
+        User user = userRepository.findByEmail(userEmail).orElseThrow();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+        boolean isValid =   jwtService.isTokenValid(token,userDetails);
+        final Map<String,Object> response = new HashMap<>();
+        response.put("code","200");
+        response.put("email",user.getEmail());
+        response.put("idUser",user.getId());
+        response.put("isValidToken", isValid);
+        return  ResponseEntity.ok(response);
+    }catch (RuntimeException e){
+        throw  new DefaultErrorException(e.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
+
+    }
+
+    private AuthenticationResponse getAuthenticationResponse(User user) {
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("email",user.getEmail());
+        userData.put("phone",user.getPhone());
+        String token = jwtService.generateToken(user);
+        return AuthenticationResponse.builder()
+                .token(token)
+                .userData(userData)
+                .build();
+    }
+
     public AuthenticationResponse authenticate(AuthenticationRequest request){
         try{
             boolean exists = userRepository.findByEmail(request.getEmail()).isPresent();
@@ -59,10 +94,7 @@ public class AuthenticationService {
                     )
             );
             User user = userRepository.findByEmail(request.getEmail()).get();
-            String token = jwtService.generateToken(user);
-            return AuthenticationResponse.builder()
-                    .token(token)
-                    .build();
+            return getAuthenticationResponse(user);
         }
         catch (RuntimeException e){
             throw  new DefaultErrorException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

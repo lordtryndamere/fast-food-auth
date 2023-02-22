@@ -41,12 +41,7 @@ public class SecurityConfiguration  {
                         .anyRequest()
                         .authenticated()
 
-                ) //methodos http que seran permitidos sin token
-//                .requestMatchers("/api/v1/auth/**") //mahcher de metodos permitidos
-//                .permitAll() //permite todos los endpoint que estan en el requestMatchers
-//                .anyRequest() // fuera de los arriba no permite ninguno que no este autenticado
-//                .authenticated()
-//                .and()
+                )
                 .sessionManagement() //la sesion ayuda a garantizar que cada request, esta autenticado
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
