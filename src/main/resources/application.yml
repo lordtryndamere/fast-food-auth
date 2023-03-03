@@ -21,5 +21,9 @@ spring:
 server:
   port: 3000
 aws:
+  accessKey: AKIAXUVWYETFRIWYKSPG
+  secretKey: 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
   region: us-east-1
+
+
 

@@ -4,8 +4,6 @@ package com.liondevs.fastfood.authorizationserver.service;
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.amazonaws.services.secretsmanager.model.CreateSecretRequest;
 import com.amazonaws.services.secretsmanager.model.CreateSecretResult;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liondevs.fastfood.authorizationserver.config.SecretsManagerPullConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,15 +26,18 @@ public class AwsSecretsManagerService {
       log.debug("Created secret with ARN: " + arn);
    }
 
-   public <T> T getSecret(String secretId, Class<T> type) {
+   public String getSecret(String secretId) {
       try {
-        T secret = secretsManagerPullConfig.getSecret(secretId, type);
-         ObjectMapper objectMapper = new ObjectMapper();
-         return objectMapper.readValue((JsonParser) secret, type);
+         SecretResponse response =  secretsManagerPullConfig.getSecret(secretId, SecretResponse.class);
+         return response.SECRET_KEY;
       } catch (Exception e) {
          throw new RuntimeException(e);
       }
    }
 
+   public static class SecretResponse{
+
+      public  String SECRET_KEY;
+   }
 
 }

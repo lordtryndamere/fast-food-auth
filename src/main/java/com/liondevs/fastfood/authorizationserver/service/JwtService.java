@@ -21,7 +21,7 @@ import java.util.function.Function;
 public class JwtService {
     private final AwsSecretsManagerService secretsManager;
     private String secretKey()  {
-       return secretsManager.getSecret(Constants.secretName, String.class);
+        return secretsManager.getSecret(Constants.secretName);
     }
 
     public String getUserName(String token){

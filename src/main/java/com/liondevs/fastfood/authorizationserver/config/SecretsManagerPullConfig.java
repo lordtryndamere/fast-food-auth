@@ -24,7 +24,6 @@ public class SecretsManagerPullConfig {
         GetSecretValueResult getSecretValueResult = client.getSecretValue(getSecretValueRequest);
 
         String secretString = getSecretValueResult.getSecretString();
-        log.info(secretString);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
