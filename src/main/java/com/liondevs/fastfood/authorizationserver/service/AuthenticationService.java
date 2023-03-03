@@ -42,7 +42,7 @@ public class AuthenticationService {
         User user = mapper.map(request);
         boolean exist = userRepository.findByEmail(user.getEmail()).isPresent();
         if(exist){
-            throw new DefaultErrorException("User email already exists", HttpStatus.BAD_REQUEST);
+            throw new DefaultErrorException("User email: "+ user.getEmail()+" already exists", HttpStatus.BAD_REQUEST);
         }
         userRepository.save(user);
         return getAuthenticationResponse(user);
@@ -55,7 +55,8 @@ public class AuthenticationService {
     public ResponseEntity<?> validateToken(String token){
     try {
         String userEmail = jwtService.getUserName(token);
-        User user = userRepository.findByEmail(userEmail).orElseThrow();
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(()-> new UserNotFoundException("User with email: " + userEmail+ " was not found",HttpStatus.NOT_FOUND));
         UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
         boolean isValid =   jwtService.isTokenValid(token,userDetails);
         final Map<String,Object> response = new HashMap<>();
@@ -64,7 +65,9 @@ public class AuthenticationService {
         response.put("idUser",user.getId());
         response.put("isValidToken", isValid);
         return  ResponseEntity.ok(response);
-    }catch (RuntimeException e){
+    } catch (UserNotFoundException e){
+        throw  new UserNotFoundException(e.getMessage(), HttpStatus.NOT_FOUND);
+    } catch (RuntimeException e){
         throw  new DefaultErrorException(e.getMessage(),HttpStatus.BAD_REQUEST);
     }
 

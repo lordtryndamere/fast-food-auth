@@ -1,12 +1,14 @@
 package com.liondevs.fastfood.authorizationserver.service;
 
+import com.liondevs.fastfood.authorizationserver.constants.Constants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
@@ -14,10 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-@Service
+@Component
+@RequiredArgsConstructor
 public class JwtService {
-    //TODO: MOVE THIS TO CONFIGURATION REPO
-    private static final String SECRET_KEY = "3777217A24432646294A404E635266556A586E3272357538782F413F442A472D";
+    private final AwsSecretsManagerService secretsManager;
+    private String secretKey()  {
+       return secretsManager.getSecret(Constants.secretName, String.class);
+    }
 
     public String getUserName(String token){
         return  extractClaim(token,Claims::getSubject);
@@ -65,7 +70,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY); // decoder de la libreria jwt
+        byte[] keyBytes = Decoders.BASE64.decode(this.secretKey()); // decoder de la libreria jwt
         return Keys.hmacShaKeyFor(keyBytes); // de jwt library
     }
 }

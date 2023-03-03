@@ -85,6 +85,37 @@
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
             <version>4.0.0</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>1.12.419</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-core -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-core</artifactId>
+            <version>1.12.419</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-secretsmanager -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-secretsmanager</artifactId>
+            <version>1.12.419</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-test-utils -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-test-utils</artifactId>
+            <version>1.12.419</version>
+            <scope>test</scope>
+        </dependency>
+
+
+
+
     </dependencies>
 
     <build>

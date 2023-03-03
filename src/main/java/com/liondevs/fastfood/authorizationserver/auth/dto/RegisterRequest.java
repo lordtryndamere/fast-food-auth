@@ -22,8 +22,6 @@ public class RegisterRequest {
     @NotEmpty(message = "Email is required")
     //TODO: AVERIGUAR EMAIL VALIDO
     @Email(message = "invalid email")
-    @NotNull
-    @NotBlank(message = "email is mandatory")
     private String email;
     @NotEmpty(message = "Phone is required")
     @NotNull
