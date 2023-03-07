@@ -3,6 +3,7 @@ package com.liondevs.fastfood.authorizationserver.auth;
 import com.liondevs.fastfood.authorizationserver.auth.dto.AuthenticationRequest;
 import com.liondevs.fastfood.authorizationserver.auth.dto.AuthenticationResponse;
 import com.liondevs.fastfood.authorizationserver.auth.dto.RegisterRequest;
+import com.liondevs.fastfood.authorizationserver.auth.dto.ValidateTokenResponse;
 import com.liondevs.fastfood.authorizationserver.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,22 +21,22 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
+    public AuthenticationResponse register(
          @Valid @RequestBody RegisterRequest request
     ){
-    return  ResponseEntity.ok(authenticationService.register(request));
+    return  authenticationService.register(request);
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> register(
+    public AuthenticationResponse authenticate(
            @Valid @RequestBody AuthenticationRequest request
     ){
-        return  ResponseEntity.ok(authenticationService.authenticate(request));
+        return  authenticationService.authenticate(request);
     }
 
     @PostMapping("/validate-token")
     @ResponseBody
-    public ResponseEntity<?> validateToken(
+    public ValidateTokenResponse validateToken(
              @RequestParam(name = "token") String  token
     ){
         return  authenticationService.validateToken(token);

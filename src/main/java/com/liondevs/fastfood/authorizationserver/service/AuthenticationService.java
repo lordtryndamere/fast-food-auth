@@ -4,6 +4,7 @@ import com.liondevs.fastfood.authorizationserver.auth.dto.AuthenticationRequest;
 import com.liondevs.fastfood.authorizationserver.auth.dto.AuthenticationResponse;
 import com.liondevs.fastfood.authorizationserver.auth.dto.RegisterRequest;
 
+import com.liondevs.fastfood.authorizationserver.auth.dto.ValidateTokenResponse;
 import com.liondevs.fastfood.authorizationserver.exceptions.DefaultErrorException;
 import com.liondevs.fastfood.authorizationserver.exceptions.UserNotFoundException;
 import com.liondevs.fastfood.authorizationserver.mapper.CreateUserInDTOToUser;
@@ -52,19 +53,19 @@ public class AuthenticationService {
     }
     }
 
-    public ResponseEntity<?> validateToken(String token){
+    public ValidateTokenResponse validateToken(String token){
     try {
         String userEmail = jwtService.getUserName(token);
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(()-> new UserNotFoundException("User with email: " + userEmail+ " was not found",HttpStatus.NOT_FOUND));
         UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
         boolean isValid =   jwtService.isTokenValid(token,userDetails);
-        final Map<String,Object> response = new HashMap<>();
-        response.put("code","200");
-        response.put("email",user.getEmail());
-        response.put("idUser",user.getId());
-        response.put("isValidToken", isValid);
-        return  ResponseEntity.ok(response);
+        return ValidateTokenResponse.builder()
+                .code(String.valueOf(HttpStatus.OK.value()))
+                .email(user.getEmail())
+                .idUser(user.getId())
+                .isValidToken(isValid)
+                .build();
     } catch (UserNotFoundException e){
         throw  new UserNotFoundException(e.getMessage(), HttpStatus.NOT_FOUND);
     } catch (RuntimeException e){
