@@ -15,6 +15,7 @@ public class RegisterRequest {
     @NotNull
     @NotBlank(message = "firstName is mandatory")
     private  String firstName;
+
     @NotEmpty(message = "Lastname is required")
     @NotNull
     @NotBlank(message = "lastName is mandatory")
@@ -27,10 +28,15 @@ public class RegisterRequest {
     @NotNull
     @NotBlank(message = "phone is mandatory")
     private String phone;
+
+    @NotEmpty(message = "from is required")
+    @NotNull
+    @NotBlank(message = "from is mandatory")
+    private String from;
+    private Long restaurantId;
     @NotEmpty(message = "Password is required")
     @NotNull
     @NotBlank(message = "password is mandatory")
-
     private String password;
 
 

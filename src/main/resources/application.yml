@@ -19,7 +19,7 @@ spring:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
 server:
-  port: 3000
+  port: 3001
   error:
     include-binding-errors: always
 aws:

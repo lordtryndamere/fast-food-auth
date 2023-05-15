@@ -6,25 +6,29 @@ import com.liondevs.fastfood.authorizationserver.auth.dto.RegisterRequest;
 
 import com.liondevs.fastfood.authorizationserver.auth.dto.ValidateTokenResponse;
 import com.liondevs.fastfood.authorizationserver.exceptions.DefaultErrorException;
+import com.liondevs.fastfood.authorizationserver.exceptions.InvalidRoleException;
 import com.liondevs.fastfood.authorizationserver.exceptions.UserNotFoundException;
 import com.liondevs.fastfood.authorizationserver.mapper.CreateUserInDTOToUser;
 import com.liondevs.fastfood.authorizationserver.persistence.entity.User;
+
 import com.liondevs.fastfood.authorizationserver.persistence.enums.Role;
 import com.liondevs.fastfood.authorizationserver.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
+
+import com.liondevs.fastfood.authorizationserver.constants.Constants;
+
 
 @Service
 @RequiredArgsConstructor
@@ -86,11 +90,25 @@ public class AuthenticationService {
                 .build();
     }
 
+    private boolean validateRole(AuthenticationRequest request){
+        User user =  userRepository.findByEmail(request.getEmail()).get();
+        String from = request.getFrom();
+        if(Objects.equals(from,Constants.APP_USER)){
+            return Objects.equals(user.getRole(),Role.USER);
+        }
+        if(Objects.equals(from,Constants.APP_RESTAURANT)){
+            return Objects.equals(user.getRole(),Role.ADMIN_RESTAURANT);
+        }
+        return  Objects.equals(user.getRole(),Role.SUPER_ADMIN);
+    }
+
     public AuthenticationResponse authenticate(AuthenticationRequest request){
+
         try{
             boolean exists = userRepository.findByEmail(request.getEmail()).isPresent();
             if(!exists) throw new UserNotFoundException(request.getEmail(),HttpStatus.NOT_FOUND);
             //call authentication manager and authenticate
+            if(!validateRole(request)) throw new InvalidRoleException("Invalid Role, please verify it.", HttpStatus.BAD_REQUEST);
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getEmail(),

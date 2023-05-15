@@ -1,6 +1,7 @@
 package com.liondevs.fastfood.authorizationserver.mapper;
 
 import com.liondevs.fastfood.authorizationserver.auth.dto.RegisterRequest;
+import com.liondevs.fastfood.authorizationserver.constants.Constants;
 import com.liondevs.fastfood.authorizationserver.persistence.entity.User;
 import com.liondevs.fastfood.authorizationserver.persistence.enums.Role;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,25 @@ public class CreateUserInDTOToUser  implements iMapper<RegisterRequest, User>{
         user.setEmail(in.getEmail());
         user.setPhone(in.getPhone());
         user.setPassword(passwordEncoder.encode(in.getPassword()));
-        user.setRole(Role.USER);
+        if(in.getRestaurantId() !=  null)user.setRestaurantId(in.getRestaurantId());
+        user.setRole(assignRole(in.getFrom()));
         user.setCreated_at(LocalDateTime.now());
         user.setUpdated_at(LocalDateTime.now());
         return user;
+    }
+
+    public Role assignRole(String from ){
+        switch (from){
+            case Constants.APP_RESTAURANT -> {
+                return Role.ADMIN_RESTAURANT;
+            }
+            case Constants.SUPER_APP -> {
+                return Role.SUPER_ADMIN;
+            }
+            default -> {
+                return Role.USER;
+            }
+        }
+
     }
 }

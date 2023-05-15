@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.regex.Pattern;
+
 
 
 @Data
@@ -29,4 +29,12 @@ public class AuthenticationRequest {
     @NotNull
     @NotBlank(message = "Password is mandatory")
     private String password;
+
+    @NotEmpty(message = "from is required")
+    @NotNull
+    @NotBlank(message = "from is mandatory")
+    private String from;
+
+
+
 }

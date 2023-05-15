@@ -38,9 +38,11 @@ public class User implements UserDetails {
     private String email;
 
     @NotEmpty(message = "Phone is required")
-
     @Column( nullable = false)
     private String phone;
+
+
+    private Long restaurantId;
 
 
     @Column( nullable = false)

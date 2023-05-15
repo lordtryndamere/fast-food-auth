@@ -2,7 +2,7 @@ package com.liondevs.fastfood.authorizationserver.persistence.enums;
 
 public enum Role {
     USER,
-    SUPERADMIN,
+    SUPER_ADMIN,
     
-    ADMINRESTAURANT
+    ADMIN_RESTAURANT
 }
