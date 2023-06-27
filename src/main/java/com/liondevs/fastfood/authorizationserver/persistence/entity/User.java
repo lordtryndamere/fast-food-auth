@@ -42,7 +42,7 @@ public class User implements UserDetails {
     private String phone;
 
 
-    private Long restaurantId;
+    private Long placeId;
 
 
     @Column( nullable = false)

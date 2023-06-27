@@ -22,7 +22,7 @@ public class CreateUserInDTOToUser  implements iMapper<RegisterRequest, User>{
         user.setEmail(in.getEmail());
         user.setPhone(in.getPhone());
         user.setPassword(passwordEncoder.encode(in.getPassword()));
-        if(in.getRestaurantId() !=  null)user.setRestaurantId(in.getRestaurantId());
+        if(in.getPlaceId() !=  null)user.setPlaceId(in.getPlaceId());
         user.setRole(assignRole(in.getFrom()));
         user.setCreated_at(LocalDateTime.now());
         user.setUpdated_at(LocalDateTime.now());
@@ -31,8 +31,8 @@ public class CreateUserInDTOToUser  implements iMapper<RegisterRequest, User>{
 
     public Role assignRole(String from ){
         switch (from){
-            case Constants.APP_RESTAURANT -> {
-                return Role.ADMIN_RESTAURANT;
+            case Constants.APP_HANDLER_PLACES -> {
+                return Role.ADMIN_PLACE;
             }
             case Constants.SUPER_APP -> {
                 return Role.SUPER_ADMIN;

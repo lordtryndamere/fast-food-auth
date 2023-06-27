@@ -81,6 +81,10 @@ public class AuthenticationService {
 
     private AuthenticationResponse getAuthenticationResponse(User user) {
         Map<String, Object> userData = new HashMap<>();
+        userData.put("id",user.getId());
+        userData.put("fullName",user.getFirstName() + " "+user.getLastName());
+        userData.put("role",user.getRole());
+        if(user.getPlaceId() != null) userData.put("placeId",user.getPlaceId());
         userData.put("email",user.getEmail());
         userData.put("phone",user.getPhone());
         String token = jwtService.generateToken(user);
@@ -96,8 +100,8 @@ public class AuthenticationService {
         if(Objects.equals(from,Constants.APP_USER)){
             return Objects.equals(user.getRole(),Role.USER);
         }
-        if(Objects.equals(from,Constants.APP_RESTAURANT)){
-            return Objects.equals(user.getRole(),Role.ADMIN_RESTAURANT);
+        if(Objects.equals(from,Constants.APP_HANDLER_PLACES)){
+            return Objects.equals(user.getRole(),Role.ADMIN_PLACE);
         }
         return  Objects.equals(user.getRole(),Role.SUPER_ADMIN);
     }

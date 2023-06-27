@@ -7,6 +7,7 @@ import com.liondevs.fastfood.authorizationserver.auth.dto.AuthenticationRequest;
 import com.liondevs.fastfood.authorizationserver.auth.dto.AuthenticationResponse;
 import com.liondevs.fastfood.authorizationserver.auth.dto.RegisterRequest;
 import com.liondevs.fastfood.authorizationserver.auth.dto.ValidateTokenResponse;
+import com.liondevs.fastfood.authorizationserver.constants.Constants;
 import com.liondevs.fastfood.authorizationserver.exceptions.UserNotFoundException;
 import com.liondevs.fastfood.authorizationserver.service.AuthenticationService;
 import org.junit.jupiter.api.Assertions;
@@ -83,6 +84,8 @@ public class AuthenticationControllerTest {
         userDetailsRequestModel.setFirstName("Kevin");
         userDetailsRequestModel.setLastName("Romero");
         userDetailsRequestModel.setPassword("12345678");
+        userDetailsRequestModel.setFrom(Constants.APP_USER);
+
 
         final AuthenticationResponse response = response(userDetailsRequestModel);
         when(authService.register(any(RegisterRequest.class))).thenReturn(response);
@@ -112,6 +115,7 @@ public class AuthenticationControllerTest {
         AuthenticationRequest userDetailsRequestModel = new AuthenticationRequest();
         userDetailsRequestModel.setEmail("test@gmail.com");
         userDetailsRequestModel.setPassword("12345678");
+        userDetailsRequestModel.setFrom(Constants.APP_USER);
 
         final AuthenticationResponse response = response(userDetailsRequestModel);
         when(authService.authenticate(any(AuthenticationRequest.class))).thenReturn(response);

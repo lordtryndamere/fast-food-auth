@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.liondevs.fastfood</groupId>
     <artifactId>authorization-server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>authorization-server</name>
     <description>authorization-server</description>
     <properties>
@@ -103,6 +103,11 @@
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-secretsmanager</artifactId>
             <version>1.12.419</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>3.0.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-test-utils -->

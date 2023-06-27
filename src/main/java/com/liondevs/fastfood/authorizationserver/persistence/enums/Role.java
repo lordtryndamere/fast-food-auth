@@ -4,5 +4,5 @@ public enum Role {
     USER,
     SUPER_ADMIN,
     
-    ADMIN_RESTAURANT
+    ADMIN_PLACE
 }

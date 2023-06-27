@@ -33,7 +33,7 @@ public class RegisterRequest {
     @NotNull
     @NotBlank(message = "from is mandatory")
     private String from;
-    private Long restaurantId;
+    private Long placeId;
     @NotEmpty(message = "Password is required")
     @NotNull
     @NotBlank(message = "password is mandatory")
